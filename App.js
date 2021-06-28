@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList } from 'react-native';
 
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState('');
@@ -12,7 +12,7 @@ export default function App() {
   }
 
   const handleSubmit = () => {
-    setCourseGoals(currentGoals => [...currentGoals, enteredGoal]);
+    setCourseGoals(currentGoals => [...currentGoals, { key: Math.random().toString(), value: enteredGoal }]);
   }
 
   return (
@@ -27,9 +27,13 @@ export default function App() {
           onPress={handleSubmit}
           title="Add" />
       </View>
-      <ScrollView>
-        {courseGoals.map((goal) => <View key={uuidv4()} style={styles.listItem}><Text> {goal}</Text></View>)}
-      </ScrollView>
+      <FlatList
+        data={courseGoals}
+        renderItem={itemData =>
+          <View style={styles.listItem}>
+            <Text> {itemData.item.value}</Text>
+          </View>}
+      />
     </View>
   );
 }
